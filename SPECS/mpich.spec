@@ -1,6 +1,8 @@
+%global source_date_epoch_from_changelog 1
+
 Summary:        A high-performance implementation of MPI
 Name:           mpich
-Version:        3.4.2
+Version:        4.1.1
 Release:        1%{?dist}
 License:        MIT
 URL:            https://www.mpich.org/
@@ -10,12 +12,6 @@ Source1:        mpich.macros
 Source2:        mpich.pth.py3
 Patch0:         mpich-modules.patch
 Patch1:         0001-Drop-real128.patch
-# Drop build flags, e.g. -specs... and -lto from mpi wrappers (mpicc and mpicxx)
-# for discussion see:
-# https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/message/7TFWEKTDWBYBHEGMIWBVI3AVGORZGNBS/
-Patch3:         fix_wrapper_flags.patch
-# https://github.com/pmodels/mpich/issues/4534
-Patch4:         0001-Revert-Remove-use-of-vasprintf.patch
 
 BuildRequires: make
 BuildRequires:  gcc
@@ -106,10 +102,6 @@ mpich support for Python 3.
 %ifarch %{arm}
 %patch1 -p1
 %endif
-
-%patch3 -p1
-
-%patch4 -p1
 
 %build
 ./autogen.sh
@@ -239,6 +231,14 @@ make check VERBOSE=1 \
 %{python3_sitearch}/%{name}.pth
 
 %changelog
+* Sat Jun 03 2023 Kamal Heib <kheib@redhat.com> - 4.1.1-1
+- Update to upstream release 4.1.1
+- Resolves: rhbz#2212011
+
+* Thu Apr 06 2023 Kyle Walker <kwalker@redhat.com> - 3.4.2-2
+- Enable source_date_epoch_from_changelog
+- Related: rhbz#1972098
+
 * Thu Dec 09 2021 Honggang Li <honli@redhat.com> - 3.4.2-1
 - Update to latest upstream release 3.4.2
 - Resolves: rhbz#2008515
